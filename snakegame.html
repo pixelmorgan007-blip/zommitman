@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Galaxy Snake</title>
+  <link rel="stylesheet" href="snakegame.css">
+</head>
+<body>
+  <div class="page-shell">
+    <div class="game-panel">
+      <header>
+        <h1>Neon Galaxy Snake</h1>
+        <p class="subtitle">Eat, grow, and beat your high score.</p>
+      </header>
+
+      <div class="score-board">
+        <div>
+          <div>Score</div>
+          <span id="score">0</span>
+        </div>
+        <div>
+          <div>High Score</div>
+          <span id="highScore">0</span>
+        </div>
+      </div>
+
+      <div class="speed-settings">
+        <label for="speedSlider">Snake speed: <span id="speedValue">Normal</span></label>
+        <input id="speedSlider" type="range" min="60" max="220" step="10" value="120">
+        <div class="speed-labels">
+          <span>Slow</span>
+          <span>Normal</span>
+          <span>Fast</span>
+        </div>
+      </div>
+
+      <div class="board-shell">
+        <canvas id="gameCanvas" width="520" height="520" aria-label="Snake game board"></canvas>
+        <div class="instructions">
+          <p>Use arrow keys to move the snake.</p>
+          <p>Eat glowing food to grow and earn points.</p>
+        </div>
+      </div>
+
+      <button id="restartButton">Restart Game</button>
+      <div class="hint">Tip: avoid crashing into the walls or your own tail.</div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scale = 26;
+    const rows = canvas.height / scale;
+    const cols = canvas.width / scale;
+    const scoreEl = document.getElementById('score');
+    const highScoreEl = document.getElementById('highScore');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedValue = document.getElementById('speedValue');
+    const restartButton = document.getElementById('restartButton');
+    const STORAGE_KEY = 'snakegameHighScore';
+
+    let snake;
+    let velocity;
+    let food;
+    let score;
+    let highScore = Number(localStorage.getItem(STORAGE_KEY)) || 0;
+    let gameLoopId;
+    let speedDelay = Number(speedSlider.value);
+    let isPaused = false;
+
+    highScoreEl.textContent = highScore;
+
+    function createFood() {
+      const position = {
+        x: Math.floor(Math.random() * cols),
+        y: Math.floor(Math.random() * rows)
+      };
+
+      if (snake.some(segment => segment.x === position.x && segment.y === position.y)) {
+        return createFood();
+      }
+
+      return position;
+    }
+
+    function resetGame() {
+      snake = [{ x: 10, y: 10 }];
+      velocity = { x: 1, y: 0 };
+      food = createFood();
+      score = 0;
+      isPaused = false;
+      scoreEl.textContent = score;
+      drawBoard();
+    }
+
+    function updateScore() {
+      scoreEl.textContent = score;
+      if (score > highScore) {
+        highScore = score;
+        highScoreEl.textContent = highScore;
+        localStorage.setItem(STORAGE_KEY, highScore);
+      }
+    }
+
+    function showGameOver() {
+      isPaused = true;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 32px "Segoe UI"';
+      ctx.textAlign = 'center';
+      ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 14);
+      ctx.font = '18px "Segoe UI"';
+      ctx.fillText('Press Restart to play again', canvas.width / 2, canvas.height / 2 + 24);
+    }
+
+    function formatSpeedLabel(value) {
+      if (value <= 80) return 'Fast';
+      if (value <= 140) return 'Normal';
+      return 'Slow';
+    }
+
+    function updateSpeed(newDelay) {
+      speedDelay = newDelay;
+      speedValue.textContent = formatSpeedLabel(newDelay);
+      if (gameLoopId) {
+        clearInterval(gameLoopId);
+      }
+      gameLoopId = setInterval(() => {
+        if (!isPaused) {
+          advanceSnake();
+        }
+      }, speedDelay);
+    }
+
+    function drawBoard() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#060d24';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < 40; i += 2) {
+        ctx.fillStyle = 'rgba(120, 190, 255, 0.04)';
+        ctx.fillRect(i * 13, 0, 2, canvas.height);
+        ctx.fillRect(0, i * 13, canvas.width, 2);
+      }
+
+      snake.forEach((segment, index) => {
+        ctx.fillStyle = index === 0 ? '#f7ff7f' : '#6de4ff';
+        ctx.shadowColor = index === 0 ? '#ffff80' : '#6df4ff';
+        ctx.shadowBlur = 12;
+        ctx.fillRect(segment.x * scale + 2, segment.y * scale + 2, scale - 4, scale - 4);
+      });
+
+      ctx.shadowBlur = 24;
+      ctx.shadowColor = '#ff5cff';
+      ctx.fillStyle = '#ff97ff';
+      ctx.beginPath();
+      ctx.arc(food.x * scale + scale / 2, food.y * scale + scale / 2, scale / 2.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    function advanceSnake() {
+      const head = {
+        x: snake[0].x + velocity.x,
+        y: snake[0].y + velocity.y
+      };
+
+      const hitWall = head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows;
+      const hitSelf = snake.some(segment => segment.x === head.x && segment.y === head.y);
+
+      if (hitWall || hitSelf) {
+        showGameOver();
+        return;
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score += 10;
+        updateScore();
+        food = createFood();
+      } else {
+        snake.pop();
+      }
+
+      drawBoard();
+    }
+
+    function handleKeydown(event) {
+      const direction = event.key.replace('Arrow', '').toLowerCase();
+      const nextVelocity = { x: velocity.x, y: velocity.y };
+
+      if (direction === 'up' && velocity.y === 0) {
+        nextVelocity.x = 0;
+        nextVelocity.y = -1;
+      }
+      if (direction === 'down' && velocity.y === 0) {
+        nextVelocity.x = 0;
+        nextVelocity.y = 1;
+      }
+      if (direction === 'left' && velocity.x === 0) {
+        nextVelocity.x = -1;
+        nextVelocity.y = 0;
+      }
+      if (direction === 'right' && velocity.x === 0) {
+        nextVelocity.x = 1;
+        nextVelocity.y = 0;
+      }
+
+      velocity = nextVelocity;
+    }
+
+    document.addEventListener('keydown', event => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault();
+        handleKeydown(event);
+      }
+    });
+
+    speedSlider.addEventListener('input', event => {
+      updateSpeed(Number(event.target.value));
+    });
+
+    restartButton.addEventListener('click', () => {
+      resetGame();
+    });
+
+    resetGame();
+    updateSpeed(speedDelay);
+  </script>
+</body>
+</html>
