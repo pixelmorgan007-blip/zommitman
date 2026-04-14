@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Meme Page</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 20px;
+                background-color: #f0f0f0;
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+            }
+            .meme {
+                position: relative;
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+            }
+            .meme img {
+                width: 100%;
+                height: auto;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            }
+            .top-text, .bottom-text {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+                text-transform: uppercase;
+                width: 90%;
+            }
+            .top-text {
+                top: 10px;
+            }
+            .bottom-text {
+                bottom: 10px;
+            }
+            @media (max-width: 600px) {
+                .top-text, .bottom-text {
+                    font-size: 18px;
+                }
+                body {
+                    padding: 10px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="meme">
+            <img src="catlaugh.jpg" alt="Meme Image">
+        </div>
+    </body>
+</html>
+</html>
