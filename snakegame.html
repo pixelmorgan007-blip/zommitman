@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -38,8 +38,17 @@
       <div class="board-shell">
         <canvas id="gameCanvas" width="520" height="520" aria-label="Snake game board"></canvas>
         <div class="instructions">
-          <p>Use arrow keys to move the snake.</p>
+          <p>Use arrow keys, swipe on the board, or tap the controls below.</p>
           <p>Eat glowing food to grow and earn points.</p>
+        </div>
+
+        <div class="touch-controls" aria-label="Snake controls">
+          <button id="upControl" class="control-button">↑</button>
+          <div class="control-row">
+            <button id="leftControl" class="control-button">←</button>
+            <button id="downControl" class="control-button">↓</button>
+            <button id="rightControl" class="control-button">→</button>
+          </div>
         </div>
       </div>
 
@@ -59,6 +68,10 @@
     const speedSlider = document.getElementById('speedSlider');
     const speedValue = document.getElementById('speedValue');
     const restartButton = document.getElementById('restartButton');
+    const upControl = document.getElementById('upControl');
+    const downControl = document.getElementById('downControl');
+    const leftControl = document.getElementById('leftControl');
+    const rightControl = document.getElementById('rightControl');
     const STORAGE_KEY = 'snakegameHighScore';
 
     let snake;
@@ -69,6 +82,7 @@
     let gameLoopId;
     let speedDelay = Number(speedSlider.value);
     let isPaused = false;
+    let pointerStart = null;
 
     highScoreEl.textContent = highScore;
 
@@ -189,8 +203,7 @@
       drawBoard();
     }
 
-    function handleKeydown(event) {
-      const direction = event.key.replace('Arrow', '').toLowerCase();
+    function setDirection(direction) {
       const nextVelocity = { x: velocity.x, y: velocity.y };
 
       if (direction === 'up' && velocity.y === 0) {
@@ -213,6 +226,34 @@
       velocity = nextVelocity;
     }
 
+    function handleKeydown(event) {
+      const direction = event.key.replace('Arrow', '').toLowerCase();
+      setDirection(direction);
+    }
+
+    function handlePointerDown(event) {
+      pointerStart = event.type.startsWith('touch') ? event.touches[0] : event;
+    }
+
+    function handlePointerUp(event) {
+      if (!pointerStart) return;
+      const endPoint = event.type.startsWith('touch') ? event.changedTouches[0] : event;
+      const dx = endPoint.clientX - pointerStart.clientX;
+      const dy = endPoint.clientY - pointerStart.clientY;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      if (Math.max(absX, absY) > 30) {
+        if (absX > absY) {
+          setDirection(dx > 0 ? 'right' : 'left');
+        } else {
+          setDirection(dy > 0 ? 'down' : 'up');
+        }
+      }
+
+      pointerStart = null;
+    }
+
     document.addEventListener('keydown', event => {
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
         event.preventDefault();
@@ -220,9 +261,18 @@
       }
     });
 
+    canvas.addEventListener('pointerdown', handlePointerDown);
+    canvas.addEventListener('pointerup', handlePointerUp);
+    canvas.addEventListener('pointercancel', () => { pointerStart = null; });
+
     speedSlider.addEventListener('input', event => {
       updateSpeed(Number(event.target.value));
     });
+
+    upControl.addEventListener('click', () => setDirection('up'));
+    downControl.addEventListener('click', () => setDirection('down'));
+    leftControl.addEventListener('click', () => setDirection('left'));
+    rightControl.addEventListener('click', () => setDirection('right'));
 
     restartButton.addEventListener('click', () => {
       resetGame();
