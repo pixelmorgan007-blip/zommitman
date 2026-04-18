@@ -1,6 +1,12 @@
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #0c0c0c, #1a1a2e, #16213e);
+    /* Galaxy "void" base */
+    background:
+        radial-gradient(1200px 800px at 20% 20%, rgba(110, 64, 170, 0.18), transparent 60%),
+        radial-gradient(1000px 700px at 80% 35%, rgba(28, 167, 255, 0.10), transparent 60%),
+        radial-gradient(900px 650px at 50% 85%, rgba(255, 56, 166, 0.06), transparent 65%),
+        radial-gradient(1200px 900px at 50% 50%, rgba(255, 255, 255, 0.04), transparent 55%),
+        linear-gradient(180deg, #02030a 0%, #010106 55%, #000000 100%);
     background-attachment: fixed;
     display: flex;
     justify-content: center;
@@ -9,6 +15,95 @@ body {
     margin: 0;
     color: #fff;
     overflow-x: hidden;
+    position: relative;
+    isolation: isolate; /* keep galaxy layers behind content */
+}
+
+/* Parallax vars (normalized [-1..1]) updated by galaxy.js */
+:root {
+    --galaxy-x: 0;
+    --galaxy-y: 0;
+}
+
+/* Starfield layers (behind content, above the base gradient) */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: -30vmax; /* oversize so parallax never shows edges */
+    pointer-events: none;
+    z-index: -1;
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity, filter, background-position;
+}
+
+/* Small sharp stars + twinkle */
+body::before {
+    background-image:
+        radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.95), transparent 55%),
+        radial-gradient(1px 1px at 80px 120px, rgba(255, 255, 255, 0.75), transparent 55%),
+        radial-gradient(1px 1px at 140px 60px, rgba(255, 255, 255, 0.85), transparent 55%),
+        radial-gradient(1px 1px at 210px 180px, rgba(255, 255, 255, 0.70), transparent 55%),
+        radial-gradient(1px 1px at 260px 40px, rgba(255, 255, 255, 0.90), transparent 55%),
+        radial-gradient(1px 1px at 320px 160px, rgba(255, 255, 255, 0.65), transparent 55%),
+        radial-gradient(1px 1px at 410px 90px, rgba(255, 255, 255, 0.85), transparent 55%),
+        radial-gradient(1px 1px at 520px 220px, rgba(255, 255, 255, 0.70), transparent 55%);
+    background-size: 560px 280px;
+    background-repeat: repeat;
+    opacity: 0.9;
+    filter: brightness(1.05);
+    transform: translate3d(
+        calc(var(--galaxy-x) * 14px),
+        calc(var(--galaxy-y) * 14px),
+        0
+    );
+    animation: galaxyTwinkle 3.8s ease-in-out infinite;
+}
+
+/* Soft stars + nebula haze + slow drift */
+body::after {
+    background-image:
+        radial-gradient(2px 2px at 60px 80px, rgba(255, 255, 255, 0.22), transparent 60%),
+        radial-gradient(2px 2px at 200px 40px, rgba(255, 255, 255, 0.18), transparent 60%),
+        radial-gradient(2px 2px at 320px 140px, rgba(255, 255, 255, 0.20), transparent 60%),
+        radial-gradient(700px 420px at 30% 30%, rgba(82, 155, 255, 0.08), transparent 60%),
+        radial-gradient(650px 480px at 75% 40%, rgba(185, 90, 255, 0.07), transparent 62%),
+        radial-gradient(780px 520px at 55% 78%, rgba(255, 75, 155, 0.04), transparent 66%),
+        radial-gradient(1200px 900px at 50% 50%, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.92) 75%);
+    background-size: 420px 220px, 420px 220px, 420px 220px, auto, auto, auto, auto;
+    background-repeat: repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+    opacity: 0.95;
+    filter: saturate(1.05) blur(0.2px);
+    transform: translate3d(
+        calc(var(--galaxy-x) * 22px),
+        calc(var(--galaxy-y) * 22px),
+        0
+    );
+    animation: galaxyDrift 26s linear infinite;
+}
+
+@keyframes galaxyTwinkle {
+    0% {
+        opacity: 0.75;
+        filter: brightness(0.95);
+    }
+    50% {
+        opacity: 1;
+        filter: brightness(1.25);
+    }
+    100% {
+        opacity: 0.78;
+        filter: brightness(1.0);
+    }
+}
+
+@keyframes galaxyDrift {
+    0% {
+        background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+    }
+    100% {
+        background-position: 220px 140px, -180px 120px, 140px -110px, 0 0, 0 0, 0 0, 0 0;
+    }
 }
 
 .container {
@@ -16,6 +111,8 @@ body {
     padding: 20px;
     max-width: 1200px;
     width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 h1 {
@@ -93,6 +190,7 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
+    z-index: 1;
 }
 
 .left-btn {
@@ -111,6 +209,14 @@ h1 {
 .corner-btn:hover {
     box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
     transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+        animation: none !important;
+        transform: none !important;
+    }
 }
 
 /* Mobile Responsiveness */
