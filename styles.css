@@ -127,6 +127,7 @@ h1 {
     cursor: pointer;
     margin: 20px auto;
     max-width: 300px;
+    min-height: 48px; /* Ensure touch-friendly size */
 }
 
 .web-dev-btn:hover {
@@ -175,6 +176,7 @@ h1 {
     justify-content: center;
     transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(150px) rotate(calc(-40deg * var(--i)));
     animation: orbit 22s linear infinite;
+    min-height: 48px; /* Touch-friendly */
 }
 
 .social-link:hover {
@@ -218,6 +220,7 @@ h1 {
     transition: all 0.3s ease;
     text-decoration: none;
     z-index: 1;
+    min-height: 44px; /* Touch-friendly */
 }
 
 .left-btn {
