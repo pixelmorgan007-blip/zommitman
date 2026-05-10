@@ -277,16 +277,28 @@ h1 {
     }
 
     .links {
-        width: 300px;
-        height: 300px;
+        width: 100%;
+        max-width: 360px;
+        height: auto;
         margin: 0 auto 20px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        gap: 12px;
+        padding: 0;
+    }
+
+    .links::before {
+        display: none;
     }
 
     .social-link {
-        width: 120px;
-        padding: 10px 12px;
+        position: static;
+        width: 100%;
+        transform: none;
+        animation: none;
+        padding: 12px 14px;
         font-size: 15px;
-        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(110px) rotate(calc(-40deg * var(--i)));
+        min-height: 48px;
     }
 
     .corner-btn {
@@ -327,16 +339,15 @@ h1 {
     }
 
     .links {
-        width: 260px;
-        height: 260px;
+        max-width: 100%;
+        grid-template-columns: 1fr;
+        gap: 10px;
         margin: 0 auto 18px;
     }
 
     .social-link {
-        width: 110px;
-        padding: 8px 10px;
-        font-size: 13px;
-        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(100px) rotate(calc(-40deg * var(--i)));
+        padding: 10px 12px;
+        font-size: 14px;
     }
 
     .corner-btn {
