@@ -173,7 +173,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translate(-50%, -50%) rotate(calc(45deg * var(--i))) translate(150px) rotate(calc(-45deg * var(--i)));
+    transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(150px) rotate(calc(-40deg * var(--i)));
     animation: orbit 22s linear infinite;
 }
 
@@ -181,15 +181,15 @@ h1 {
     background: #ff00ff;
     color: #000;
     box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px #ff00ff;
-    transform: translate(-50%, -50%) rotate(calc(45deg * var(--i))) translate(150px) rotate(calc(-45deg * var(--i))) scale(1.06);
+    transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(150px) rotate(calc(-40deg * var(--i))) scale(1.06);
 }
 
 @keyframes orbit {
     from {
-        transform: translate(-50%, -50%) rotate(calc(45deg * var(--i))) translate(150px) rotate(calc(-45deg * var(--i)));
+        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(150px) rotate(calc(-40deg * var(--i)));
     }
     to {
-        transform: translate(-50%, -50%) rotate(calc(45deg * var(--i) + 360deg)) translate(150px) rotate(calc(-45deg * var(--i) - 360deg));
+        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i) + 360deg)) translate(150px) rotate(calc(-40deg * var(--i) - 360deg));
     }
 }
 
@@ -201,6 +201,7 @@ h1 {
 .social-link:nth-child(6) { --i: 5; }
 .social-link:nth-child(7) { --i: 6; }
 .social-link:nth-child(8) { --i: 7; }
+.social-link:nth-child(9) { --i: 8; }
 
 .corner-btn {
     position: absolute;
@@ -282,7 +283,7 @@ h1 {
         width: 120px;
         padding: 10px 12px;
         font-size: 15px;
-        transform: translate(-50%, -50%) rotate(calc(45deg * var(--i))) translate(110px) rotate(calc(-45deg * var(--i)));
+        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(110px) rotate(calc(-40deg * var(--i)));
     }
 
     .corner-btn {
@@ -332,7 +333,7 @@ h1 {
         width: 110px;
         padding: 8px 10px;
         font-size: 13px;
-        transform: translate(-50%, -50%) rotate(calc(45deg * var(--i))) translate(100px) rotate(calc(-45deg * var(--i)));
+        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(100px) rotate(calc(-40deg * var(--i)));
     }
 
     .corner-btn {
