@@ -361,111 +361,278 @@ h1:last-of-type {
 }
 
 /* =====================================================
-   MOBILE
+   MOBILE ORBIT LAYOUT
+   SAME STYLE AS PC
 ===================================================== */
 
 @media (max-width: 768px) {
 
+    body {
+        overflow-x: hidden;
+    }
+
     .container {
-        padding: 68px 12px 30px;
+        padding: 90px 10px 40px;
     }
 
     h1 {
-        font-size: 1.4em;
+        font-size: 1.2rem;
+        line-height: 1.4;
     }
 
     h1:last-of-type {
-        font-size: 0.85em;
+        font-size: 0.8rem;
     }
 
     .web-dev-btn {
-        font-size: 12px;
-        padding: 12px 18px;
-        margin: 12px auto 24px;
+        font-size: 11px;
+        padding: 12px 16px;
+        margin-bottom: 40px;
+        max-width: 250px;
     }
 
-    .corner-btn {
-        font-size: 0.55rem;
-        padding: 6px 8px;
-    }
-
-    /* SMALLER ORBIT SYSTEM */
+    /* =========================
+       SOLAR SYSTEM
+    ========================= */
 
     .solar-system {
-        width: 300px;
-        height: 300px;
+        position: relative;
+        width: 100%;
+        max-width: 340px;
+        height: 340px;
+        margin: 20px auto 30px;
     }
+
+    /* CENTER SUN */
 
     .sun {
-        width: 65px;
-        height: 65px;
+        width: 70px;
+        height: 70px;
         font-size: 0.38rem;
+
+        left: 50%;
+        top: 50%;
+
+        transform: translate(-50%, -50%);
     }
+
+    /* ORBIT RING */
 
     .orbit-ring {
-        width: 260px;
-        height: 260px;
-        margin-left: -130px;
-        margin-top: -130px;
+        width: 250px;
+        height: 250px;
+
+        left: 50%;
+        top: 50%;
+
+        margin-left: -125px;
+        margin-top: -125px;
+
+        border: 1px dashed rgba(255,0,255,0.35);
     }
 
+    /* TRACK */
+
+    .orbit-track {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+
+        width: 0;
+        height: 0;
+
+        transform-origin: center center;
+
+        animation: orbitSpinMobile 20s linear infinite;
+    }
+
+    /* PLANETS */
+
     .orbit-track .planet {
+
+        position: absolute;
+
         width: 82px;
-        font-size: 10px;
-        padding: 7px;
+        min-height: 40px;
+
+        padding: 6px 8px;
+
+        font-size: 9px;
+        font-weight: 700;
+
+        border-radius: 50px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        line-height: 1.2;
+
+        background: rgba(0,0,0,0.7);
+
+        color: #ff00ff;
+
+        border: 1.5px solid #ff00ff;
+
+        box-shadow:
+            0 0 10px #ff00ff,
+            0 0 25px rgba(255,0,255,0.5);
+
+        text-decoration: none;
 
         transform:
-            translateX(130px)
+            translateX(125px)
             translateY(-50%)
             rotate(calc(-1 * var(--start-angle)));
 
-        animation: counterSpinMobile 22s linear infinite;
+        animation:
+            counterSpinMobile 20s linear infinite;
+    }
+
+    /* HOVER */
+
+    .orbit-track .planet:hover,
+    .orbit-track .planet:active {
+
+        background: #ff00ff;
+        color: #000;
+
+        box-shadow:
+            0 0 20px #ff00ff,
+            0 0 40px #ff00ff,
+            0 0 60px rgba(255,0,255,0.7);
+    }
+
+    /* ROTATION */
+
+    @keyframes orbitSpinMobile {
+
+        from {
+            transform: rotate(var(--start-angle));
+        }
+
+        to {
+            transform: rotate(calc(var(--start-angle) + 360deg));
+        }
     }
 
     @keyframes counterSpinMobile {
+
         from {
             transform:
-                translateX(130px)
+                translateX(125px)
                 translateY(-50%)
                 rotate(calc(-1 * var(--start-angle)));
         }
 
         to {
             transform:
-                translateX(130px)
+                translateX(125px)
                 translateY(-50%)
                 rotate(calc(-1 * (var(--start-angle) + 360deg)));
         }
     }
+
+    /* PLANET POSITIONS */
+
+    .orbit-track:nth-child(3) {
+        --start-angle: 0deg;
+    }
+
+    .orbit-track:nth-child(4) {
+        --start-angle: 45deg;
+    }
+
+    .orbit-track:nth-child(5) {
+        --start-angle: 90deg;
+    }
+
+    .orbit-track:nth-child(6) {
+        --start-angle: 135deg;
+    }
+
+    .orbit-track:nth-child(7) {
+        --start-angle: 180deg;
+    }
+
+    .orbit-track:nth-child(8) {
+        --start-angle: 225deg;
+    }
+
+    .orbit-track:nth-child(9) {
+        --start-angle: 270deg;
+    }
+
+    .orbit-track:nth-child(10) {
+        --start-angle: 315deg;
+    }
+
+    /* EXTRA LINK */
+
+    .extra-links {
+        margin-top: 15px;
+    }
+
+    .extra-link {
+        font-size: 11px;
+        padding: 10px 16px;
+    }
+
+    /* REMOVE OLD MOBILE GRID */
+
+    .mobile-links,
+    .extra-links-mobile {
+        display: none !important;
+    }
 }
+
+/* =====================================================
+   EXTRA SMALL PHONES
+===================================================== */
 
 @media (max-width: 400px) {
 
     .solar-system {
-        width: 250px;
-        height: 250px;
+        max-width: 280px;
+        height: 280px;
     }
 
     .orbit-ring {
+
         width: 210px;
         height: 210px;
+
         margin-left: -105px;
         margin-top: -105px;
     }
 
+    .sun {
+        width: 60px;
+        height: 60px;
+
+        font-size: 0.33rem;
+    }
+
     .orbit-track .planet {
-        width: 70px;
+
+        width: 68px;
+
         font-size: 8px;
+
+        padding: 5px;
 
         transform:
             translateX(105px)
             translateY(-50%)
             rotate(calc(-1 * var(--start-angle)));
 
-        animation: counterSpinTiny 22s linear infinite;
+        animation:
+            counterSpinTiny 20s linear infinite;
     }
 
     @keyframes counterSpinTiny {
+
         from {
             transform:
                 translateX(105px)
