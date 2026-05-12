@@ -1,4 +1,6 @@
 /* ===== BASE RESET & FONT ===== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -7,11 +9,11 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    overflow-x: hidden; /* Prevent horizontal scroll / doubling */
+    overflow-x: hidden;
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     background:
         radial-gradient(1200px 800px at 20% 20%, rgba(110, 64, 170, 0.18), transparent 60%),
         radial-gradient(1000px 700px at 80% 35%, rgba(28, 167, 255, 0.10), transparent 60%),
@@ -30,6 +32,8 @@ body {
 :root {
     --galaxy-x: 0;
     --galaxy-y: 0;
+    --orbit-radius: 170px;
+    --orbit-duration: 22s;
 }
 
 /* ===== STARFIELD (desktop only) ===== */
@@ -92,7 +96,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
     body::before, body::after { animation: none !important; transform: none !important; }
-    .social-link { animation: none !important; }
+    .orbit-track { animation: none !important; }
 }
 
 /* ===== CORNER BUTTONS (top nav) ===== */
@@ -104,8 +108,9 @@ body {
     color: #000;
     border: none;
     border-radius: 6px;
-    font-weight: bold;
-    font-size: 0.78rem;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 0.65rem;
     text-transform: uppercase;
     box-shadow: 0 0 10px #00ffff;
     cursor: pointer;
@@ -116,6 +121,7 @@ body {
     min-height: 40px;
     display: flex;
     align-items: center;
+    letter-spacing: 0.05em;
 }
 
 .corner-btn:hover {
@@ -132,7 +138,7 @@ body {
 .container {
     text-align: center;
     padding: 80px 16px 40px;
-    max-width: 900px;
+    max-width: 1000px;
     width: 100%;
     margin: 0 auto;
     position: relative;
@@ -141,15 +147,20 @@ body {
 
 /* ===== HEADINGS ===== */
 h1 {
-    font-size: 2.2em;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.9em;
     color: #00ffff;
     text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
     margin: 0 0 16px;
     line-height: 1.3;
+    letter-spacing: 0.04em;
 }
 
 h1:last-of-type {
-    font-size: 1.25em;
+    font-size: 1em;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     margin-bottom: 10px;
 }
 
@@ -161,16 +172,18 @@ h1:last-of-type {
     color: #00ff00;
     border: 2px solid #00ff00;
     border-radius: 10px;
-    font-size: 17px;
-    font-weight: bold;
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
     text-transform: uppercase;
     text-decoration: none;
     transition: all 0.3s ease;
     box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
     cursor: pointer;
-    margin: 14px auto 28px;
+    margin: 14px auto 40px;
     min-height: 48px;
     line-height: 1;
+    letter-spacing: 0.08em;
 }
 
 .web-dev-btn:hover {
@@ -180,164 +193,328 @@ h1:last-of-type {
     transform: scale(1.05);
 }
 
-/* ===== ORBIT LAYOUT (desktop) ===== */
-@media (min-width: 769px) {
-    .links {
-        position: relative;
-        width: 380px;
-        height: 380px;
-        margin: 0 auto 30px;
-        padding: 0;
-        list-style: none;
-    }
+/* =====================================================
+   SOLAR SYSTEM ORBIT LAYOUT — DESKTOP
+   ===================================================== */
 
-    .links::before {
-        content: "";
-        position: absolute;
-        inset: 25px;
-        border: 2px dashed rgba(255, 0, 255, 0.35);
-        border-radius: 50%;
-        pointer-events: none;
-    }
-
-    .social-link {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 150px;
-        padding: 12px 14px;
-        background: rgba(0, 0, 0, 0.55);
-        color: #ff00ff;
-        text-decoration: none;
-        border: 2px solid #ff00ff;
-        border-radius: 50px;
-        font-size: 15px;
-        font-weight: bold;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(150px) rotate(calc(-40deg * var(--i)));
-        animation: orbit 22s linear infinite;
-        min-height: 48px;
-    }
-
-    .social-link:hover {
-        background: #ff00ff;
-        color: #000;
-        box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px #ff00ff;
-        transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(150px) rotate(calc(-40deg * var(--i))) scale(1.06);
-    }
-
-    @keyframes orbit {
-        from { transform: translate(-50%, -50%) rotate(calc(40deg * var(--i))) translate(150px) rotate(calc(-40deg * var(--i))); }
-        to   { transform: translate(-50%, -50%) rotate(calc(40deg * var(--i) + 360deg)) translate(150px) rotate(calc(-40deg * var(--i) - 360deg)); }
-    }
-
-    .social-link:nth-child(1) { --i: 0; }
-    .social-link:nth-child(2) { --i: 1; }
-    .social-link:nth-child(3) { --i: 2; }
-    .social-link:nth-child(4) { --i: 3; }
-    .social-link:nth-child(5) { --i: 4; }
-    .social-link:nth-child(6) { --i: 5; }
-    .social-link:nth-child(7) { --i: 6; }
-    .social-link:nth-child(8) { --i: 7; }
-    .social-link:nth-child(9) { --i: 8; }
+/* The "solar system" wrapper — sized to fit orbits */
+.solar-system {
+    position: relative;
+    width: 420px;
+    height: 420px;
+    margin: 0 auto 50px;
 }
 
-/* ===== GRID LAYOUT (mobile) ===== */
+/* The central "sun" planet */
+.sun {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 80px;
+    height: 80px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 35% 35%, #ffe066, #ff8c00 55%, #7a3000);
+    border-radius: 50%;
+    box-shadow:
+        0 0 20px rgba(255, 200, 0, 0.9),
+        0 0 50px rgba(255, 150, 0, 0.6),
+        0 0 90px rgba(255, 80, 0, 0.3);
+    animation: sunPulse 4s ease-in-out infinite;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.45rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+}
+
+@keyframes sunPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255,200,0,0.9), 0 0 50px rgba(255,150,0,0.6), 0 0 90px rgba(255,80,0,0.3); }
+    50%       { box-shadow: 0 0 30px rgba(255,220,0,1),   0 0 70px rgba(255,160,0,0.8), 0 0 120px rgba(255,90,0,0.5); }
+}
+
+/* The orbit ring (dashed circle) */
+.orbit-ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 380px;
+    height: 380px;
+    margin-left: -190px;
+    margin-top: -190px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(255, 0, 255, 0.35);
+    pointer-events: none;
+    z-index: 1;
+    animation: ringGlow 6s ease-in-out infinite;
+}
+
+@keyframes ringGlow {
+    0%, 100% { border-color: rgba(255,0,255,0.25); box-shadow: 0 0 8px rgba(255,0,255,0.1) inset; }
+    50%       { border-color: rgba(255,0,255,0.55); box-shadow: 0 0 16px rgba(255,0,255,0.2) inset; }
+}
+
+/* Each orbit track — rotates the whole thing, one per link */
+.orbit-track {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform-origin: center center;
+    animation: orbitSpin var(--orbit-duration, 22s) linear infinite;
+    z-index: 5;
+}
+
+/* The planet (the actual link button) — counter-rotates so text stays upright */
+.orbit-track .planet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 110px;
+    transform: translateX(190px) translateY(-50%) rotate(calc(-1 * var(--start-angle)));
+    background: rgba(0, 0, 0, 0.6);
+    color: #ff00ff;
+    text-decoration: none;
+    border: 1.5px solid #ff00ff;
+    border-radius: 50px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 9px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 44px;
+    box-shadow: 0 0 8px #ff00ff, 0 0 18px rgba(255,0,255,0.4);
+    transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+    animation: counterSpin var(--orbit-duration, 22s) linear infinite;
+    cursor: pointer;
+    white-space: normal;
+    line-height: 1.2;
+}
+
+.orbit-track .planet:hover {
+    background: #ff00ff;
+    color: #000;
+    box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px rgba(255,0,255,0.6);
+}
+
+@keyframes orbitSpin {
+    from { transform: rotate(var(--start-angle)); }
+    to   { transform: rotate(calc(var(--start-angle) + 360deg)); }
+}
+
+@keyframes counterSpin {
+    from { transform: translateX(190px) translateY(-50%) rotate(calc(-1 * var(--start-angle))); }
+    to   { transform: translateX(190px) translateY(-50%) rotate(calc(-1 * (var(--start-angle) + 360deg))); }
+}
+
+/* Stagger each planet's starting angle evenly: 360/9 ≈ 40deg each */
+.orbit-track:nth-child(2)  { --start-angle: 0deg;    animation-delay: 0s; }
+.orbit-track:nth-child(2)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(3)  { --start-angle: 40deg;   animation-delay: 0s; }
+.orbit-track:nth-child(3)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(4)  { --start-angle: 80deg;   animation-delay: 0s; }
+.orbit-track:nth-child(4)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(5)  { --start-angle: 120deg;  animation-delay: 0s; }
+.orbit-track:nth-child(5)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(6)  { --start-angle: 160deg;  animation-delay: 0s; }
+.orbit-track:nth-child(6)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(7)  { --start-angle: 200deg;  animation-delay: 0s; }
+.orbit-track:nth-child(7)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(8)  { --start-angle: 240deg;  animation-delay: 0s; }
+.orbit-track:nth-child(8)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(9)  { --start-angle: 280deg;  animation-delay: 0s; }
+.orbit-track:nth-child(9)  .planet { animation-delay: 0s; }
+
+.orbit-track:nth-child(10) { --start-angle: 320deg;  animation-delay: 0s; }
+.orbit-track:nth-child(10) .planet { animation-delay: 0s; }
+
+
+/* ===== CONSPIRACY + SECONDARY LINKS (non-orbit) ===== */
+.extra-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.extra-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.5);
+    color: #00ffff;
+    text-decoration: none;
+    border: 1.5px solid #00ffff;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 0 0 8px rgba(0,255,255,0.4);
+    transition: all 0.25s;
+    min-height: 44px;
+}
+
+.extra-link:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 20px #00ffff, 0 0 40px rgba(0,255,255,0.5);
+}
+
+/* =====================================================
+   MOBILE LAYOUT  ≤ 768px
+   Hide solar system, show grid instead
+   ===================================================== */
+.solar-system { display: none; } /* hidden by default, shown on desktop */
+
+@media (min-width: 769px) {
+    .solar-system { display: block; }
+    .mobile-links  { display: none; }
+}
+
+/* Mobile grid */
+.mobile-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto 24px;
+}
+
+.mobile-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 13px 10px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ff00ff;
+    text-decoration: none;
+    border: 1.5px solid #ff00ff;
+    border-radius: 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    box-shadow: 0 0 8px rgba(255,0,255,0.5);
+    min-height: 52px;
+    transition: all 0.25s ease;
+    line-height: 1.3;
+}
+
+.mobile-link:active,
+.mobile-link:hover {
+    background: #ff00ff;
+    color: #000;
+    box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+}
+
+/* Mobile extra links */
+.extra-links-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto 24px;
+}
+
+.extra-link-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 16px;
+    background: rgba(0,0,0,0.5);
+    color: #00ffff;
+    text-decoration: none;
+    border: 1.5px solid #00ffff;
+    border-radius: 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 0 0 8px rgba(0,255,255,0.4);
+    min-height: 52px;
+    transition: all 0.25s;
+}
+
+.extra-link-mobile:active,
+.extra-link-mobile:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 20px #00ffff, 0 0 40px rgba(0,255,255,0.5);
+}
+
 @media (max-width: 768px) {
     .container {
-        padding: 72px 12px 30px;
+        padding: 68px 12px 30px;
     }
 
     h1 {
-        font-size: 1.7em;
+        font-size: 1.4em;
     }
 
     h1:last-of-type {
-        font-size: 1.05em;
+        font-size: 0.85em;
     }
 
     .web-dev-btn {
-        font-size: 15px;
-        padding: 12px 20px;
-        margin: 12px auto 20px;
+        font-size: 12px;
+        padding: 12px 18px;
+        margin: 12px auto 24px;
         display: block;
-        max-width: 280px;
-    }
-
-    .links {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto 20px;
-        padding: 0;
-        list-style: none;
-        height: auto !important;
-    }
-
-    .links::before {
-        display: none;
-    }
-
-    .social-link {
-        position: static !important;
-        width: 100% !important;
-        transform: none !important;
-        animation: none !important;
-        padding: 12px 10px;
-        background: rgba(0, 0, 0, 0.55);
-        color: #ff00ff;
-        text-decoration: none;
-        border: 2px solid #ff00ff;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: bold;
-        text-transform: uppercase;
-        box-shadow: 0 0 8px #ff00ff, 0 0 16px #ff00ff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        min-height: 52px;
-        transition: all 0.25s ease;
-    }
-
-    .social-link:active,
-    .social-link:hover {
-        background: #ff00ff;
-        color: #000;
-        box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+        max-width: 260px;
     }
 
     .corner-btn {
-        font-size: 0.68rem;
-        padding: 7px 9px;
+        font-size: 0.58rem;
+        padding: 6px 8px;
         top: 10px;
         min-height: 36px;
+        letter-spacing: 0;
     }
 
-    .left-btn   { left: 6px; }
-    .right-btn  { right: 6px; }
+    .left-btn  { left: 5px; }
+    .right-btn { right: 5px; }
+
+    .extra-links { display: none; }
 }
 
 @media (max-width: 400px) {
-    .links {
+    .mobile-links {
         grid-template-columns: 1fr;
         max-width: 280px;
     }
 
-    h1 { font-size: 1.4em; }
-    h1:last-of-type { font-size: 0.95em; }
+    h1 { font-size: 1.2em; }
+    h1:last-of-type { font-size: 0.8em; }
 
     .corner-btn {
-        font-size: 0.6rem;
-        padding: 6px 7px;
+        font-size: 0.55rem;
+        padding: 5px 7px;
     }
 }
